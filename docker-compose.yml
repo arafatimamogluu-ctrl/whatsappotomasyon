@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    container_name: whatsapp_backend
+    environment:
+      - PORT=5000
+      - MONGODB_URI=mongodb://mongo:27017/whatsapp-automation
+      - JWT_SECRET=${JWT_SECRET}
+      - FRONTEND_URL=http://localhost:3000
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongo
+    restart: always
+
+  frontend:
+    build: ./frontend
+    container_name: whatsapp_frontend
+    ports:
+      - "3000:80"
+    restart: always
+
+  mongo:
+    image: mongo:latest
+    container_name: whatsapp_mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    restart: always
+
+volumes:
+  mongo-data:
